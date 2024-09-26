@@ -9,8 +9,6 @@ public class Player : MonoBehaviour
     public GameObject bombPrefab;
     public Transform bombsTransform;
 
-
-
     private Vector3 velocity = Vector3.zero;
 
     //public float targetSpeed = 3f;
@@ -18,6 +16,10 @@ public class Player : MonoBehaviour
 
     public float maxSpeed = 3f;
     public float accelerationTime = 2f;
+
+
+    public float testTime = 0.25f;
+    public bool testingSpeed = true;
 
     public float accel = 1f;
 
@@ -27,80 +29,100 @@ public class Player : MonoBehaviour
     private void Start()
     {
         accel = maxSpeed / accelerationTime;
-        //accel = targetSpeed / timeToReachTargetSpeed;
+
+        if (testingSpeed)
+        {
+            StartCoroutine(SpeedTest());
+        }
     }
 
     void Update()
     {
-
         PlayerMovement();
-
-        
-
     }
-
-
 
 
     private void PlayerMovement()
     {
 
+        if (!Input.anyKey)
+        {
+               if (velocity.magnitude > 0){
+
+                if (velocity.x > 0)
+                {
+                    velocity += -Vector3.right * (accel * 0.25f) * Time.deltaTime;
+                }
+
+                if (velocity.x < 0)
+                {
+                    velocity += -Vector3.left * (accel * 0.25f) * Time.deltaTime;
+                }
+
+                if (velocity.y > 0)
+                {
+                    velocity += -Vector3.up * (accel * 0.25f) * Time.deltaTime;
+                }
+
+                if (velocity.y < 0)
+                {
+                    velocity += -Vector3.down * (accel * 0.25f) * Time.deltaTime;
+                }
+            }
+
+
+        }
+
+
         //reset velocity, otherwise it keeps going when no keys are pressed
         //velocity = Vector3.zero;
 
-        // set 'isKeyPressed' variables to false here, then set to true in each GetKey
-        // if any keyPressed values are false, apply decel time
-        // or always * decel in each GetKey, just change decel outside of them?
-
         if (Input.GetKey("left") && PlayerWithinBounds(1))
         {
-            velocity += Vector3.left * accel * Time.deltaTime;
+             velocity += Vector3.left * accel * Time.deltaTime;
+            //velocity += Vector3.left * maxSpeed;
         }
 
-       if (Input.GetKey("right") && PlayerWithinBounds(2))
+        // USED FOR TESTING!
+       if (Input.GetKey("right") && PlayerWithinBounds(2) || testingSpeed)
         {
             velocity += Vector3.right * accel * Time.deltaTime;
+            // velocity += Vector3.right * maxSpeed;
         } 
 
         if (Input.GetKey("up") && PlayerWithinBounds(3))
         {
             velocity += Vector3.up * accel * Time.deltaTime;
+            //velocity += Vector3.up * maxSpeed;
         }
 
         if (Input.GetKey("down") && PlayerWithinBounds(4))
         {
             velocity += Vector3.down * accel * Time.deltaTime;
+            //velocity += Vector3.down * maxSpeed;
         }
 
-        //velocity = velocity.normalized * moveSpeed;
-
-        /* if (velocity.x > maxSpeed)
-         {
-             velocity.x = maxSpeed;
-         }
-
-         if (velocity.x < -maxSpeed)
-         {
-             velocity.x = -maxSpeed;
-         }
-
-         if (velocity.y > maxSpeed)
-         {
-             velocity.y = maxSpeed;
-         }
-
-         if (velocity.y < -maxSpeed)
-         {
-             velocity.y = -maxSpeed;
-         }*/
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
-
-
         transform.position += velocity * Time.deltaTime;
-
-
-
     }
+
+    private IEnumerator SpeedTest()
+    {
+        testingSpeed = true;
+        yield return new WaitForSeconds(testTime);
+        testingSpeed = false;
+        Debug.Log("Current speed = " + velocity.x + " after " + testTime + " seconds." +
+            "Should reach " + maxSpeed + " in " + accelerationTime + " seconds");      
+    }
+
+
+    // decel pseudocode!!! v 
+    // set 'isKeyPressed' variables to false here, then set to true in each GetKey?
+    // if any keyPressed values are false, apply decel time
+    // or always * decel in each GetKey, just change decel outside of them?
+
+
+    // velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
 
     //1 = left, //2 = right, 3 = up, 4 = down
 
@@ -109,13 +131,10 @@ public class Player : MonoBehaviour
         // could set the bounds as variables in case the boundaries need to change
         // i.e. "> verticalBounds" or "< -verticalBounds"
 
-        return true; //TESTING!
+        // return true; //TESTING!
 
         if (bounds == 1 && transform.position.x < -18)
-        { 
-            velocity = Vector3.zero;
-            return false;
-        }
+        { return false; }
 
         if (bounds == 2 && transform.position.x > 18)
         { return false; }

@@ -20,10 +20,28 @@ public class Stars : MonoBehaviour
     {
 
         DrawConstellation();
+        //DrawLine();
 
     }
 
+    // IN-CLASS - ENABLED
     private void DrawConstellation()
+    {
+        Color lineColor = Color.white;
+        lineColor.a = lineOpacity;
+
+        for (int i = 0; i < starListSize - 1; i++)
+        {
+            Debug.DrawLine(starTransforms[i].position, starTransforms[i + 1].position, lineColor);
+
+        }
+
+        lineOpacity -= 0.0005f;
+
+    }
+
+    // JOURNAL 3 - DISABLED
+    private void DrawLine()
     {
 
 
@@ -32,12 +50,35 @@ public class Stars : MonoBehaviour
 
         for (int i = 0; i < starListSize - 1; i++)
         {
-            Debug.DrawLine(starTransforms[i].position, starTransforms[i + 1].position, lineColor);
-            
-        }
+            float currentLineLength = 0f;
+            float distance = Vector3.Distance(starTransforms[i + 1].position, starTransforms[i].position);
 
-        lineOpacity -= 0.0005f;
+            while (currentLineLength <= distance)
+            {
+                Vector3 direction = new Vector3(starTransforms[i + 1].position.x - starTransforms[i].position.x, starTransforms[i + 1].position.y - starTransforms[i].position.y);
+                Vector3 normalizedDirection = NormalizeVector(direction);
+                Vector3 newPoint = new Vector3(starTransforms[i].position.x + (normalizedDirection.x * currentLineLength), starTransforms[i].position.y + (normalizedDirection.y * currentLineLength));
+
+                Debug.DrawLine(transform.position, newPoint, Color.white);
+                currentLineLength += 0.00001f;
+            }
+        }
+    }
+
+    Vector3 NormalizeVector(Vector3 v)
+    {
+        Vector3 normalized = new Vector3(v.x / GetMagnitude(v), v.y / GetMagnitude(v));
+        return normalized;
 
     }
+
+    float GetMagnitude(Vector3 v)
+    {
+
+        float magnitude = Mathf.Sqrt(v.x * v.x + v.y * v.y);
+        return magnitude;
+
+    }
+
 
 }
