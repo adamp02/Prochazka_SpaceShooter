@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
 
     public float accel = 1f;
 
+    public GameObject powerup;
+
     //public float accelerationTime = 4f;
 
     //public List<float> angles;
@@ -43,11 +45,35 @@ public class Player : MonoBehaviour
         PlayerMovement();
 
         EnemyRadar(2f, 8);
+
+        if(Input.GetKeyDown("x"))
+        {
+            SpawnPowerups(2f, 4);
+        }
+
+    }
+
+    public void SpawnPowerups(float radius, int numberOfPowerups)
+    {
+
+        List<float> spawnPoints = new List<float>();
+
+        for (int i = 0; i < numberOfPowerups + 1; i++)
+        {
+            spawnPoints.Add(((360 / numberOfPowerups) * i) * Mathf.Deg2Rad);
+            Debug.Log(spawnPoints[i]);
+        }
+
+
+        for (int i = 0; i < spawnPoints.Count - 1; i++)
+        {
+            GameObject.Instantiate(powerup, transform.position + new Vector3(Mathf.Cos(spawnPoints[i]), Mathf.Sin(spawnPoints[i])) * radius, Quaternion.identity);
+        }
+
     }
 
     public void EnemyRadar(float radius, int circlePoints)
     {
-        //currentAngle = angles[counter];
 
         List<float> angles = new List<float>();
 
