@@ -25,9 +25,11 @@ public class Player : MonoBehaviour
 
     //public float accelerationTime = 4f;
 
+    //public List<float> angles;
 
     private void Start()
     {
+
         accel = maxSpeed / accelerationTime;
 
         if (testingSpeed)
@@ -39,6 +41,42 @@ public class Player : MonoBehaviour
     void Update()
     {
         PlayerMovement();
+
+        EnemyRadar(2f, 8);
+    }
+
+    public void EnemyRadar(float radius, int circlePoints)
+    {
+        //currentAngle = angles[counter];
+
+        List<float> angles = new List<float>();
+
+        for (int i = 0; i < circlePoints + 1; i++)
+        {
+            angles.Add(((360 / circlePoints) * i)    *    Mathf.Deg2Rad);
+            Debug.Log(angles[i]);
+        }
+
+
+        float enemyDist = Vector3.Distance(enemyTransform.position, transform.position);
+
+        Color lineColor = Color.white;
+        if (enemyDist < radius)
+        {
+            lineColor = Color.red;
+        } else {
+            lineColor = Color.green;
+        }
+
+        for (int i = 0; i < angles.Count - 1; i++)
+        {
+            
+            Debug.DrawLine(transform.position + new Vector3(Mathf.Cos(angles[i]), Mathf.Sin(angles[i])) * radius,
+                transform.position + new Vector3(Mathf.Cos(angles[i+1]), Mathf.Sin(angles[i+1])) * radius, 
+                lineColor);
+
+        }
+
     }
 
 
