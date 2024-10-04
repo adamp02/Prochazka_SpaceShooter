@@ -19,7 +19,6 @@ public class NewPlayer : MonoBehaviour
     {
 
         Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
-        //rb.MovePosition(transform.position + direction * movementSpeed * Time.fixedDeltaTime);
         rb.AddForce(direction.normalized * movementSpeed);
     }
 }
