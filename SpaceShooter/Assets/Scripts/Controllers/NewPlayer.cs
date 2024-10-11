@@ -14,6 +14,7 @@ public class NewPlayer : MonoBehaviour
 
     public Transform hitboxDEMO;
 
+    public GameObject ghostSprite;
 
     void Start()
     {
@@ -23,7 +24,7 @@ public class NewPlayer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown("x")) //also check what keys are pressed -> no movement = no boost
+        if (Input.GetKeyDown("x") || Input.GetButtonDown("Fire1")) //also check what keys are pressed -> no movement = no boost
         {
             boost = true;
         }
@@ -53,6 +54,14 @@ public class NewPlayer : MonoBehaviour
 
     IEnumerator ApplyBoost()
     {
+        yield return new WaitForSeconds(0.05f);
+        Instantiate(ghostSprite, transform.position, transform.rotation);
+        yield return new WaitForSeconds(0.05f);
+        Instantiate(ghostSprite, transform.position, transform.rotation);
+        yield return new WaitForSeconds(0.05f);
+        Instantiate(ghostSprite, transform.position, transform.rotation);
+        yield return new WaitForSeconds(0.05f);
+        Instantiate(ghostSprite, transform.position, transform.rotation);
         yield return new WaitForSeconds(0.35f);
         hitboxDEMO.gameObject.SetActive(true);
     }
