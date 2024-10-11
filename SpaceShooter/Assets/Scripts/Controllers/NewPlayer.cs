@@ -7,13 +7,9 @@ public class NewPlayer : MonoBehaviour
     // Start is called before the first frame update
 
     public Rigidbody2D rb;
-
     public float movementSpeed = 2f;
-
     public bool boost = false;
-
     public Transform hitboxDEMO;
-
     public GameObject ghostSprite;
 
     void Start()
@@ -46,7 +42,7 @@ public class NewPlayer : MonoBehaviour
 
         else
         {
-            boost = false; //DOLLARAMA CODE - FIX LATER! shouldn't even get boosted at all if direction == V3.z!
+            boost = false; //FIX LATER! shouldn't even get boosted at all if direction == V3.z!
             rb.AddForce(direction.normalized * movementSpeed);
         }
 
@@ -54,6 +50,7 @@ public class NewPlayer : MonoBehaviour
 
     IEnumerator ApplyBoost()
     {
+        // this looks bad, fix!
         yield return new WaitForSeconds(0.05f);
         Instantiate(ghostSprite, transform.position, transform.rotation);
         yield return new WaitForSeconds(0.05f);
