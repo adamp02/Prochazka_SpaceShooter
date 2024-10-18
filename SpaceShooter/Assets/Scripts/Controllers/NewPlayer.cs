@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NewPlayer : MonoBehaviour
 {
-    // Start is called before the first frame update
+
 
     public Rigidbody2D rb;
     public float movementSpeed = 2f;
@@ -30,6 +30,7 @@ public class NewPlayer : MonoBehaviour
             boost = true;
         }
 
+        // not used in final version :(
         trailer.transform.position = trailerOffset.transform.position;
         trailer.transform.rotation = Quaternion.Slerp(trailer.transform.rotation, transform.rotation, trailerTurnSpeed * Time.deltaTime);
 
@@ -41,7 +42,7 @@ public class NewPlayer : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
+
 
         // turn test!
         Vector3 direction = new Vector3(0, Input.GetAxisRaw("Vertical"), 0);
@@ -56,14 +57,14 @@ public class NewPlayer : MonoBehaviour
         {
             boost = false;
             hitboxDEMO.gameObject.SetActive(false);
-            rb.AddForce(transform.up * (movementSpeed * 40f)); // also set i-frames & ghost sprite effect
+            rb.AddForce(transform.up * (movementSpeed * 40f));
             StartCoroutine(ApplyBoost());
 
         }
 
         else
         {
-            boost = false; //FIX LATER! shouldn't even get boosted at all if direction == V3.z!
+            boost = false; 
             rb.AddForce(transform.up * movementSpeed * accel);
         }
 
@@ -81,6 +82,6 @@ public class NewPlayer : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         Instantiate(ghostSprite, transform.position, transform.rotation);
         yield return new WaitForSeconds(0.35f);
-        hitboxDEMO.gameObject.SetActive(true);
+       // hitboxDEMO.gameObject.SetActive(true);
     }
 }
